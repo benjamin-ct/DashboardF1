@@ -1,17 +1,19 @@
 # frontend/Dockerfile
 
-# Etape de build
+# Étape de build
 FROM node:16 as build
 
 WORKDIR /app
 
+# Copier package.json et package-lock.json (ou yarn.lock)
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Copier tout le code source et construire l'application
 COPY . .
 RUN npm run build
 
-# Etape de production via Nginx
+# Étape de production avec Nginx
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
